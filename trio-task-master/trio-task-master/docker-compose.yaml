@@ -6,6 +6,10 @@ services:
                         - target: 5000
                           published: 5000
                           protocol: tcp
+                depends_on:
+                       - mysql
+                environment:
+                       DATABASE_URI: ${DATABASE_URI}
         mysql:
                 build: ./db
                 ports:
@@ -13,7 +17,7 @@ services:
                           published: 3306
                           protocol: tcp
                 environment: 
-                        -  MYSQL_ROOT_PASSWORD=root
+                        - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
 
         nginx:
                 image: nginx:latest
@@ -25,6 +29,8 @@ services:
                         - type: bind
                           source: ./nginx/nginx.conf
                           target: /etc/nginx/nginx.conf
+                depends_on:
+                        - flask-app
                                
                 
         
